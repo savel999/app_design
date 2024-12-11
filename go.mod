@@ -1,3 +1,3 @@
-module applicationDesignTest
+module github.com/savel999/app_design
 
-go 1.21.6
+go 1.23.3
