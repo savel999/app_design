@@ -13,8 +13,8 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
+	"github.com/savel999/app_design/internal/app/web/registry"
 	"github.com/savel999/app_design/internal/infrastructure/logger"
-	"github.com/savel999/app_design/internal/presentation/rest"
 	"github.com/savel999/app_design/internal/presentation/rest/handlers"
 )
 
@@ -65,10 +65,10 @@ func (s *Server) InitProbes() {
 	})
 }
 
-func (s *Server) InitRoutes(h *rest.Handler) {
-	s.InitProbes()
+func (s *Server) InitRoutes(cnt *registry.Container) {
+	h := handlers.New(cnt.Logger, cnt.Usecases)
 
-	s.router.Post("/orders", h.Handle(handlers.NewCreateOrderHandler()))
+	s.router.Post("/orders", h.CreateOrder())
 	s.router.HandleFunc("/*", h.ErrorHandler(http.StatusMethodNotAllowed, "route not found"))
 }
 

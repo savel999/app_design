@@ -11,11 +11,15 @@ type CreateOrderRequest struct {
 }
 
 type CreateOrderResponse struct {
-	ID     int       `json:"id"`
+	ID       int       `json:"id"`
+	Price    float64   `json:"price"`
+	Status   string    `json:"status"`
+	Email    string    `json:"email"`
+	Bookings []Booking `json:"bookings"`
+}
+
+type Booking struct {
 	RoomID int       `json:"room_id"`
-	Email  string    `json:"email"`
 	From   time.Time `json:"from"`
 	To     time.Time `json:"to"`
-	Price  float64   `json:"price"`
-	Status string    `json:"status"`
 }

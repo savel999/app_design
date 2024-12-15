@@ -9,18 +9,18 @@ import (
 )
 
 type Config struct {
-	ServiceName      string
-	LogLevel         slog.Level
-	ServerAddr       string
-	WithPreparedData bool
+	ServiceName  string
+	LogLevel     slog.Level
+	ServerAddr   string
+	WithDemoData bool
 }
 
 func InitConfig() *Config {
 	return &Config{
-		ServiceName:      env.GetString("SERVICE_NAME", "web"),
-		ServerAddr:       env.GetString("SERVER_ADDR", ":8080"),
-		LogLevel:         GetLogLevel("LOG_LEVEL", slog.LevelInfo),
-		WithPreparedData: env.GetBool("WITH_PREPARED_DATA", true),
+		ServiceName:  env.GetString("SERVICE_NAME", "web"),
+		ServerAddr:   env.GetString("SERVER_ADDR", ":8080"),
+		LogLevel:     GetLogLevel("LOG_LEVEL", slog.LevelInfo),
+		WithDemoData: env.GetBool("WITH_DEMO_DATA", true),
 	}
 }
 

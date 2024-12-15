@@ -1,15 +1,18 @@
-package rest
+package handlers
 
 import (
+	"context"
 	"encoding/json"
 	"log/slog"
 	"net/http"
 
+	"github.com/savel999/app_design/internal/app/web/registry"
 	"github.com/savel999/app_design/internal/infrastructure/logger"
 )
 
 type Handler struct {
-	logger logger.Logger
+	logger   logger.Logger
+	usecases *registry.Usecases
 }
 
 type responseError struct {
@@ -18,8 +21,8 @@ type responseError struct {
 	Errors  []string `json:"error,omitempty"`
 }
 
-func New(logger logger.Logger) *Handler {
-	return &Handler{logger: logger}
+func New(logger logger.Logger, usecases *registry.Usecases) *Handler {
+	return &Handler{logger: logger, usecases: usecases}
 }
 
 func (h *Handler) Handle(fn http.HandlerFunc) http.HandlerFunc {
@@ -58,4 +61,29 @@ func (h *Handler) ErrorHandler(
 			h.logger.ErrorContext(r.Context(), "failed to encode response", logger.ErrorAttr(err))
 		}
 	}
+}
+
+func (h *Handler) decodeRequest(ctx context.Context, w http.ResponseWriter, r *http.Request, in any) bool {
+	d := json.NewDecoder(r.Body)
+	d.DisallowUnknownFields()
+
+	if err := d.Decode(&in); err != nil {
+		h.logger.WarnContext(ctx, "failed to decode request body", logger.ErrorAttr(err))
+		h.ErrorHandler(http.StatusBadRequest, "can't parse request body")(w, r)
+
+		return false
+	}
+
+	return true
+}
+
+func (h *Handler) encodeResponse(ctx context.Context, w http.ResponseWriter, r *http.Request, status int, out any) {
+	if err := json.NewEncoder(w).Encode(out); err != nil {
+		h.logger.ErrorContext(ctx, "failed to encode response", logger.ErrorAttr(err))
+		h.ErrorHandler(http.StatusInternalServerError, "can't parse request body")(w, r)
+
+		return
+	}
+
+	w.WriteHeader(status)
 }
