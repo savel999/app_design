@@ -40,6 +40,8 @@ func (h *Handler) CreateOrder() http.HandlerFunc {
 			return
 		}
 
-		h.encodeResponse(ctx, w, r, http.StatusCreated, out)
+		w.WriteHeader(http.StatusCreated)
+
+		h.encodeResponse(ctx, w, r, out)
 	})
 }

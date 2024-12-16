@@ -41,5 +41,5 @@ func (r *HotelsRepository) GetByID(ctx context.Context, id int) (models.Hotel, e
 }
 
 func mapHotelToModel(h dto.HotelRaw) models.Hotel {
-	return models.Hotel{ID: h.ID, Name: h.Name}
+	return models.Hotel{ID: h.ID, Name: h.Name, CheckIn: h.CheckIn, CheckOut: h.CheckOut}
 }

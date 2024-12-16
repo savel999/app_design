@@ -77,13 +77,11 @@ func (h *Handler) decodeRequest(ctx context.Context, w http.ResponseWriter, r *h
 	return true
 }
 
-func (h *Handler) encodeResponse(ctx context.Context, w http.ResponseWriter, r *http.Request, status int, out any) {
+func (h *Handler) encodeResponse(ctx context.Context, w http.ResponseWriter, r *http.Request, out any) {
 	if err := json.NewEncoder(w).Encode(out); err != nil {
 		h.logger.ErrorContext(ctx, "failed to encode response", logger.ErrorAttr(err))
 		h.ErrorHandler(http.StatusInternalServerError, "can't parse request body")(w, r)
 
 		return
 	}
-
-	w.WriteHeader(status)
 }
