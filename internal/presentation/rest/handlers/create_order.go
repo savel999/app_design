@@ -28,7 +28,7 @@ func (h *Handler) CreateOrder() http.HandlerFunc {
 					logger.ErrorAttr(err), slog.Any("in", in),
 				)
 
-				h.ErrorHandler(http.StatusBadRequest, validationErrors.Message, validationErrors.Errors...)(w, r)
+				h.ErrorHandler(http.StatusUnprocessableEntity, validationErrors.Message, validationErrors.Errors...)(w, r)
 			default:
 				h.logger.ErrorContext(
 					ctx, "failed to create order", logger.ErrorAttr(err), slog.Any("in", in),
